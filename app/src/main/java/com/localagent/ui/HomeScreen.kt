@@ -1,3 +1,4 @@
+// Apple Intelligence UI - Enhanced Version
 package com.localagent.ui
 
 import androidx.compose.animation.*
