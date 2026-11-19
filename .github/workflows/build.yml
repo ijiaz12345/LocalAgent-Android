@@ -1,8 +1,12 @@
-name: Build APK
-on: push
+name: Build and Release APK
+on:
+  push:
+    branches: [main]
 jobs:
   build:
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-java@v4
@@ -12,9 +16,10 @@ jobs:
       - uses: gradle/actions/setup-gradle@v4
       - name: Build APK
         run: gradle assembleDebug --no-daemon
-      - name: Upload APK
-        uses: actions/upload-artifact@v4
+      - name: Create Release with APK
+        uses: softprops/action-gh-release@v2
         with:
-          name: LocalAgent-apk
-          path: app/build/outputs/apk/debug/app-debug.apk
-          retention-days: 7
+          tag_name: v1.0.${{ github.run_number }}
+          name: LocalAgent v1.0.${{ github.run_number }}
+          files: app/build/outputs/apk/debug/app-debug.apk
+          body: "اضغط على app-debug.apk بالأسفل لتحميل التطبيق مباشرة"
