@@ -97,7 +97,7 @@ fun HomeScreen(vm: AgentViewModel = viewModel()) {
                             .clip(RoundedCornerShape(16.dp))
                             .background(
                                 if (u.running || !u.connected || u.input.isBlank())
-                                    Brush.solid(listOf(Color(0xFF2A3A5C)))
+                                    Brush.linearGradient(listOf(Color(0xFF2A3A5C), Color(0xFF2A3A5C)))
                                 else Brush.horizontalGradient(listOf(Color(0xFF4F8DFF), Color(0xFF7FB8FF)))
                             )
                             .clickable(enabled = !u.running && u.connected && u.input.isNotBlank()) { vm.run() },
