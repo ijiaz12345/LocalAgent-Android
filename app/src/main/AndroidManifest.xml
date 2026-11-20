@@ -2,6 +2,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
     <uses-permission android:name="android.permission.INTERNET" />
     <application
+        android:name=".LocalAgentApp"
         android:label="Local Intelligence"
         android:usesCleartextTraffic="true"
         android:theme="@style/Theme.LocalAgent">
