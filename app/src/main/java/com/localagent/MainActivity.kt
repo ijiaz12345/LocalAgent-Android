@@ -10,7 +10,11 @@ import com.localagent.data.SettingsRepository
 import com.localagent.data.ThemeMode
 import com.localagent.navigation.AppNavHost
 import com.localagent.ui.theme.LocalAgentTheme
+import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.MainScope
+import kotlinx.coroutines.launch
 
+@AndroidEntryPoint
 class MainActivity : ComponentActivity() {
     private lateinit var settings: SettingsRepository
 
@@ -28,9 +32,8 @@ class MainActivity : ComponentActivity() {
                 AppNavHost(
                     darkTheme = darkTheme,
                     onToggleTheme = {
-                        kotlinx.coroutines.MainScope().launch {
-                            val next = if (darkTheme) ThemeMode.LIGHT else ThemeMode.DARK
-                            settings.setThemeMode(next)
+                        MainScope().launch {
+                            settings.setThemeMode(if (darkTheme) ThemeMode.LIGHT else ThemeMode.DARK)
                         }
                     }
                 )
