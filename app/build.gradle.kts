@@ -21,6 +21,10 @@ android {
     kotlinOptions { jvmTarget = "17" }
 }
 dependencies {
+    implementation("androidx.datastore:datastore-preferences:1.1.1")
+    implementation("androidx.compose.material:material-icons-extended:1.7.6")
+    implementation("androidx.lifecycle:lifecycle-runtime-compose:2.8.7")
+
     implementation(platform("androidx.compose:compose-bom:2024.06.00"))
     implementation("androidx.compose.ui:ui")
     implementation("androidx.compose.material3:material3")
