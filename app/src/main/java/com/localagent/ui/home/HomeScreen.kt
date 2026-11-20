@@ -2,12 +2,18 @@ package com.localagent.ui.home
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.animateColorAsState
+import androidx.compose.animation.core.FastOutSlowInEasing
 import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.animation.core.infiniteRepeatable
+import androidx.compose.animation.core.rememberInfiniteTransition
+import androidx.compose.animation.core.spring
 import androidx.compose.animation.core.tween
+import androidx.compose.animation.core.RepeatMode
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.animation.slideInVertically
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.interaction.collectIsPressedAsState
 import androidx.compose.foundation.layout.Arrangement
@@ -78,14 +84,19 @@ fun HomeScreen(
     }
 
     Box(
-        modifier = Modifier.fillMaxSize().background(MaterialTheme.colorScheme.background)
+        modifier = Modifier
+            .fillMaxSize()
+            .background(MaterialTheme.colorScheme.background)
     ) {
         Column(
-            modifier = Modifier.fillMaxSize().verticalScroll(scrollState).imePadding()
+            modifier = Modifier
+                .fillMaxSize()
+                .verticalScroll(scrollState)
+                .imePadding()
                 .padding(horizontal = 20.dp, vertical = 36.dp),
             verticalArrangement = Arrangement.spacedBy(18.dp)
         ) {
-            // ===== Header =====
+            // Header
             Row(verticalAlignment = Alignment.CenterVertically) {
                 BrandMark(44.dp, 22.sp)
                 Spacer(Modifier.width(12.dp))
@@ -128,7 +139,7 @@ fun HomeScreen(
             Text("اكتب مهمتك، ودع مساعدك يبدأ العمل.",
                 color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.6f), fontSize = 14.sp)
 
-            // ===== Suggestions =====
+            // Suggestions
             val suggestions = remember {
                 listOf(
                     Suggestion("code", "كود", "أنشئ برنامج Python لإدارة المهام"),
@@ -152,7 +163,7 @@ fun HomeScreen(
                 }
             }
 
-            // ===== Error Banner (متحرك) =====
+            // Error Banner
             AnimatedVisibility(
                 visible = state.errorMessage != null,
                 enter = fadeIn(tween(200)) + slideInVertically(tween(250)) { it / 4 },
@@ -183,7 +194,7 @@ fun HomeScreen(
                 }
             }
 
-            // ===== Input =====
+            // Input
             OutlinedTextField(
                 value = state.input, onValueChange = viewModel::onInputChanged,
                 modifier = Modifier.fillMaxWidth(),
@@ -203,7 +214,7 @@ fun HomeScreen(
                 )
             )
 
-            // ===== Run Button =====
+            // Run button
             val canRun = state.connected && !state.running && state.input.isNotBlank()
             Button(
                 onClick = { viewModel.run() },
@@ -224,7 +235,7 @@ fun HomeScreen(
                 }
             }
 
-            // ===== Result Bubble =====
+            // Result
             AnimatedVisibility(
                 visible = state.output.isNotBlank() && state.errorMessage == null,
                 enter = fadeIn(tween(300)) + slideInVertically(tween(350)) { it / 5 }
@@ -275,9 +286,20 @@ private fun PressSurface(onClick: () -> Unit, content: @Composable () -> Unit) {
 
 @Composable
 private fun BrandMark(size: androidx.compose.ui.unit.Dp, glyph: androidx.compose.ui.unit.TextUnit) {
+    val transition = rememberInfiniteTransition(label = "brand-glow")
+    val glow by transition.animateFloat(
+        initialValue = 0.8f,
+        targetValue = 1f,
+        animationSpec = infiniteRepeatable(
+            animation = tween(durationMillis = 1600),
+            repeatMode = RepeatMode.Reverse
+        ),
+        label = "brand-glow-alpha"
+    )
     Box(
         modifier = Modifier
             .size(size)
+            .graphicsLayer { scaleX = glow; scaleY = glow }
             .clip(CircleShape)
             .background(Brush.linearGradient(
                 listOf(MaterialTheme.colorScheme.primary, MaterialTheme.colorScheme.secondary))),
